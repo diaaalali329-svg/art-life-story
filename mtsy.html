@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>الأرصدة والاتصالات</title>
+  <style>
+    :root{
+      --bg:#0f1720;
+      --card:#0b1220;
+      --accent:#cfa861;
+      --muted:#9aa3b2;
+    }
+    body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background:linear-gradient(180deg,#071021,#0b1220); color:#fff; margin:0; padding:24px; }
+    .wrap { max-width:980px; margin:20px auto; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    h2 { margin:0; color:var(--accent); }
+    .back { text-decoration:none; color:var(--accent); font-weight:600; }
+
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-top:20px; }
+    .card {
+      background:var(--card);
+      border-radius:14px;
+      padding:18px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.6);
+      text-align:center;
+      transition:transform .15s ease, box-shadow .15s ease;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .card:hover { transform:translateY(-6px); box-shadow:0 18px 40px rgba(0,0,0,0.7); }
+    .logo { height:72px; object-fit:contain; margin-bottom:12px; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6)); }
+    .title { font-size:20px; font-weight:700; color:#fff; margin-bottom:8px; }
+    .desc { color:var(--muted); font-size:14px; margin-bottom:12px; }
+    .action { display:inline-block; padding:10px 14px; border-radius:10px; text-decoration:none; color:#111; font-weight:700; }
+    .mtn { background:linear-gradient(90deg,#ffd54a,#00b16a); }
+    .syriatel { background:linear-gradient(90deg,#ff6b6b,#ff3b3b); }
+
+    @media (max-width:420px){
+      .logo { height:56px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h2>الأرصدة والاتصالات</h2>
+        <div style="color:var(--muted); margin-top:6px;">اختر الشبكة لإتمام العملية</div>
+      </div>
+      <div>
+        <a class="back" href="index.html">العودة إلى الرئيسية</a>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- بطاقة MTN -->
+      <div class="card" onclick="openProvider('mtn')">
+        <img src="mtn.png" alt="MTN" class="logo" onerror="this.src=''; this.alt='MTN'">
+        <div class="title">MTN</div>
+        <div class="desc">شحن الرصيد، باقات الإنترنت، وخدمات الاتصالات.</div>
+        <a class="action mtn" href="javascript:void(0)" onclick="openProvider('mtn'); event.stopPropagation();">اختر MTN</a>
+      </div>
+
+      <!-- بطاقة SYRIATEL -->
+      <div class="card" onclick="openProvider('syriatel')">
+        <img src="syriatel.png" alt="SYRIATEL" class="logo" onerror="this.src=''; this.alt='SYRIATEL'">
+        <div class="title">SYRIATEL</div>
+        <div class="desc">شحن، تحويل رصيد، وباقات مخصصة للمشتركين.</div>
+        <a class="action syriatel" href="javascript:void(0)" onclick="openProvider('syriatel'); event.stopPropagation();">اختر SYRIATEL</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openProvider(provider) {
+      if (provider === 'mtn') {
+        // توجيه إلى صفحة مخصصة أو فتح مودال شحن
+        window.location.href = 'mtn.html';
+      } else if (provider === 'syriatel') {
+        window.location.href = 'syriatel.html';
+      } else {
+        alert('المزود غير معروف');
+      }
+    }
+  </script>
+</body>
+</html>

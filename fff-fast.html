@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Life | فري فاير فوري</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #262626;
+            --header-bg: #1f1f1f;
+            --text-color: #ffffff;
+            --main-gold: #cfa861;
+            --neon-gold: 0 0 10px #cfa861, 0 0 20px #cfa861;
+            --modal-bg: #222222;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 80px; 
+        }
+
+        /* الشريط العلوي */
+        header {
+            width: 100%;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: var(--header-bg);
+            border-bottom: 2px solid var(--main-gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .logo-main {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--main-gold);
+            text-shadow: var(--neon-gold);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .page-title { font-size: 18px; font-weight: bold; color: #ccc; }
+        .back-btn { color: var(--main-gold); text-decoration: none; font-size: 22px; transition: 0.3s; }
+        .back-btn:hover { transform: scale(1.1); }
+
+        /* شريط البحث */
+        .search-container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px 0;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 25px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            text-align: right;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* شبكة الحزم */
+        .uc-grid {
+            width: 90%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .uc-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .uc-wrapper:hover { transform: translateY(-5px); }
+
+        .uc-box {
+            background: linear-gradient(135deg, #fceabb, #f8b500); 
+            width: 100%;
+            height: 130px;
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 1px solid #e6a800;
+            overflow: hidden; /* يمنع خروج أي عنصر خارج الصندوق */
+        }
+
+        .social-icons {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .social-icons i.fa-instagram { color: #E1306C; }
+        .social-icons i.fa-facebook { color: #1877F2; }
+        .social-icons i.fa-twitter { color: #1DA1F2; }
+        .social-icons i.fa-tiktok { color: #000000; text-shadow: 1px 1px 0px #00f2fe, -1px -1px 0px #fe0979;}
+
+        .mini-logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0,0,0,0.8); 
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--main-gold);
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px solid var(--main-gold);
+        }
+
+        /* هنا تم التعديل لحل مشكلة الصورة الكبيرة */
+        .uc-image { 
+            max-width: 80%; 
+            max-height: 90px; /* يحمي الصورة من الطفح وتجاوز الـ 130px */
+            object-fit: contain; 
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); 
+            border-radius: 8px;
+        }
+
+        .uc-details { margin-top: 15px; text-align: center; }
+        .uc-title { font-size: 13px; font-weight: bold; color: #ddd; margin-bottom: 5px; }
+        .uc-price { font-size: 15px; font-weight: bold; color: white; }
+
+        /* النافذة المنبثقة المحدثة */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: none; justify-content: center;
+            align-items: center; z-index: 2000; backdrop-filter: blur(5px);
+            overflow-y: auto; padding: 20px 0;
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg); width: 90%; max-width: 400px;
+            border-radius: 15px; padding: 30px; box-sizing: border-box;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8); border: 1px solid var(--main-gold);
+        }
+
+        .modal-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 15px; color: white; }
+        .modal-price-badge { background-color: #111; color: var(--main-gold); padding: 8px 18px; border-radius: 20px; font-weight: bold; border: 1px solid #333;}
+
+        .id-input { width: 100%; background-color: #333; border: 1px solid #555; padding: 15px; border-radius: 10px; color: white; font-size: 15px; margin-bottom: 20px; box-sizing: border-box; outline: none; transition: 0.3s; text-align: left; }
+        .id-input:focus { border-color: var(--main-gold); }
+
+        .modal-actions { display: flex; gap: 15px; margin-bottom: 15px; }
+        .btn-cancel, .btn-buy { flex: 1; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-cancel { background-color: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-cancel:hover { background-color: rgba(255, 77, 77, 0.1); }
+        .btn-buy { background-color: var(--main-gold); color: #111; border: none; }
+        .btn-buy:hover { background-color: #b59254; transform: scale(1.02); }
+
+        .modal-note { text-align: center; font-size: 12px; color: #888; margin-top: 15px;}
+        .modal-note span { color: #ff4d4d; font-weight: bold;}
+
+        /* شريط التنقل السفلي (بقي كما هو بناءً على طلبك) */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background-color: var(--header-bg);
+            display: flex; justify-content: space-around; padding: 15px 0;
+            border-top: 1px solid #333; z-index: 1000;
+        }
+
+        .nav-item { color: #888; font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { color: var(--main-gold); text-shadow: var(--neon-gold); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-main">ART LIFE</a>
+        <div class="page-title">فري فاير فوري</div>
+        <a href="freefire.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+    </header>
+
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="بحث...">
+    </div>
+
+    <div class="uc-grid">
+        
+        <div class="uc-wrapper" onclick="openModal('100+10 جوهرة - فري فاير فوري', 'S.P 146,714')">
+            <div class="uc-box">
+                <div class="social-icons">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-twitter"></i>
+                    <i class="fa-brands fa-tiktok"></i>
+                </div>
+                <div class="mini-logo">AL</div>
+                <img src="free-2.png" alt="100 Diamonds" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">100+10 جوهرة - فري فاير فوري</div>
+                <div class="uc-price">S.P 146,714</div>
+            </div>
+        </div>
+
+        <div class="uc-wrapper" onclick="openModal('210+21 جوهرة - فري فاير فوري', 'S.P 293,430')">
+            <div class="uc-box">
+                <div class="social-icons">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-twitter"></i>
+                    <i class="fa-brands fa-tiktok"></i>
+                </div>
+                <div class="mini-logo">AL</div>
+                <img src="free-3.png" alt="210 Diamonds" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">210+21 جوهرة - فري فاير فوري</div>
+                <div class="uc-price">S.P 293,430</div>
+            </div>
+        </div>
+
+        <div class="uc-wrapper" onclick="openModal('530+53 جوهرة - فري فاير فوري', 'S.P 731,980')">
+            <div class="uc-box">
+                <div class="social-icons">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-twitter"></i>
+                    <i class="fa-brands fa-tiktok"></i>
+                </div>
+                <div class="mini-logo">AL</div>
+                <img src="free-4.png" alt="530 Diamonds" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">530+53 جوهرة - فري فاير فوري</div>
+                <div class="uc-price">S.P 731,980</div>
+            </div>
+        </div>
+
+        <div class="uc-wrapper" onclick="openModal('1080+108 جوهرة - فري فاير فوري', 'S.P 1,463,162')">
+            <div class="uc-box">
+                <div class="social-icons">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-twitter"></i>
+                    <i class="fa-brands fa-tiktok"></i>
+                </div>
+                <div class="mini-logo">AL</div>
+                <img src="free-5.png" alt="1080 Diamonds" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">1080+108 جوهرة - فري فاير فوري</div>
+                <div class="uc-price">S.P 1,463,162</div>
+            </div>
+        </div>
+
+        <div class="uc-wrapper" onclick="openModal('2200+220 جوهرة - فري فاير فوري', 'S.P 2,926,323')">
+            <div class="uc-box"> 
+                <div class="social-icons"> 
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-twitter"></i>
+                    <i class="fa-brands fa-tiktok"></i>
+                </div>
+                <div class="mini-logo">AL</div>
+                <img src="free-6.png" alt="2200 Diamonds" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">2200+220 جوهرة - فري فاير فوري</div>
+                <div class="uc-price">S.P 2,926,323</div>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="bottom-nav">
+        <i class="fa-solid fa-house nav-item active"></i>
+        <i class="fa-solid fa-wallet nav-item"></i>
+        <i class="fa-solid fa-bell nav-item"></i>
+        <i class="fa-solid fa-cart-shopping nav-item"></i>
+        <i class="fa-solid fa-magnifying-glass nav-item"></i>
+    </nav>
+
+    <div class="modal-overlay" id="purchaseModal">
+        <div class="modal-content">
+            <form action="https://formspree.io/f/xkoajqqe" method="POST" id="orderForm">
+                
+                <input type="hidden" name="اسم_المنتج" id="modalTitleInput">
+                <input type="hidden" name="السعر_الإجمالي" id="modalPriceInput">
+
+                <div id="step-1">
+                    <div class="modal-header-info">
+                        <span id="modalDisplayTitle">اسم الباقة</span>
+                        <span class="modal-price-badge" id="modalDisplayPrice">السعر</span>
+                    </div>
+
+                    <div class="modal-note" style="margin-top: 0; margin-bottom: 20px;">
+                        هذا المنتج يعمل بشكل أوتوماتيكي على مدار <span>24 ساعة</span>
+                    </div>
+
+                    <input type="text" name="ايدي_المستخدم" id="player_id" class="id-input" placeholder="ايدي اللاعب فري فاير" required>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" onclick="closeModal()">إلغاء</button>
+                        <button type="button" class="btn-buy" onclick="goToStep2()">دفع</button>
+                    </div>
+                </div>
+
+                <div id="step-2" style="display: none;">
+                    <div class="modal-header-info" style="border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">
+                        <span style="color: var(--main-gold); font-weight: bold;">الحسابات البنكية المعتمدة</span>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <div style="flex: 1; background-color: #333; padding: 15px 10px; border-radius: 10px; text-align: center; border: 1px solid #2ecc71; overflow: hidden;">
+                            <h4 style="margin: 0 0 10px 0; color: #2ecc71; font-size: 14px;"><i class="fa-solid fa-wallet"></i> شام كاش</h4>
+                            <img src="qr-cod.png" alt="شام كاش" style="width: 130px; height: 130px; object-fit: contain; border-radius: 8px; margin-bottom: 10px; background-color: #fff; padding: 5px;">
+                        </div>
+
+                        <div style="flex: 1; background-color: #333; padding: 15px 10px; border-radius: 10px; text-align: center; border: 1px solid #3498db; overflow: hidden;">
+                            <h4 style="margin: 0 0 10px 0; color: #3498db; font-size: 14px;"><i class="fa-solid fa-mobile-screen"></i> سيرياتيل كاش</h4>
+                            <img src="cash.png.jpeg" alt="سيرياتيل كاش" style="width: 130px; height: 130px; object-fit: contain; border-radius: 8px; margin-bottom: 10px; background-color: #fff; padding: 5px;">
+                        </div>
+                    </div>
+
+                    <select name="طريقة_الدفع" id="payment_method" class="id-input" onchange="togglePaymentFields()" style="margin-bottom: 15px;" required>
+                        <option value="">-- اختر المحفظة التي قمت بالتحويل إليها --</option>
+                        <option value="شام كاش">شام كاش</option>
+                        <option value="سيرياتيل كاش">سيرياتيل كاش</option>
+                    </select>
+
+                    <div id="sham_cash_fields" style="display: none; background: #222; padding: 15px; border-radius: 10px; border: 1px solid #2ecc71; margin-bottom: 15px;">
+                        <p style="color:#2ecc71; margin-top:0; font-size:14px; text-align:center;">إثبات دفع شام كاش</p>
+                        <input type="text" name="رقم_عملية_شام_كاش" id="sham_trans_id" class="id-input" placeholder="رقم عملية التحويل (شام كاش)" style="margin-bottom: 0;">
+                    </div>
+
+                    <div id="syriatel_fields" style="display: none; background: #222; padding: 15px; border-radius: 10px; border: 1px solid #3498db; margin-bottom: 15px;">
+                        <p style="color:#3498db; margin-top:0; font-size:14px; text-align:center;">إثبات دفع سيرياتيل كاش</p>
+                        <input type="text" name="رقم_عملية_سيرياتيل" id="syria_trans_id" class="id-input" placeholder="رقم عملية التحويل (سيرياتيل كاش)" style="margin-bottom: 0;">
+                    </div>
+
+                    <div class="modal-actions" style="margin-bottom: 0;">
+                        <button type="button" class="btn-cancel" onclick="goToStep1()">رجوع</button>
+                        <button type="button" class="btn-buy" onclick="validateAndSubmit()">إرسال الطلب</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(title, price) {
+            document.getElementById('modalTitleInput').value = title;
+            document.getElementById('modalPriceInput').value = price;
+            
+            document.getElementById('modalDisplayTitle').innerText = title;
+            document.getElementById('modalDisplayPrice').innerText = price;
+            
+            document.getElementById('player_id').value = '';
+            document.getElementById('payment_method').value = '';
+            togglePaymentFields(); 
+            
+            document.getElementById('step-1').style.display = 'block';
+            document.getElementById('step-2').style.display = 'none';
+            document.getElementById('purchaseModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        function goToStep2() {
+            var playerId = document.getElementById('player_id').value.trim();
+            
+            if (playerId === "") {
+                alert("يرجى إدخال ايدي اللاعب أولاً!");
+                return;
+            }
+            if (playerId.length < 5) {
+                alert("يرجى إدخال ID فري فاير صحيح!");
+                return;
+            }
+
+            document.getElementById('step-1').style.display = 'none';
+            document.getElementById('step-2').style.display = 'block';
+        }
+
+        function goToStep1() {
+            document.getElementById('step-2').style.display = 'none';
+            document.getElementById('step-1').style.display = 'block';
+        }
+
+        function togglePaymentFields() {
+            var method = document.getElementById('payment_method').value;
+            var shamFields = document.getElementById('sham_cash_fields');
+            var syriaFields = document.getElementById('syriatel_fields');
+
+            shamFields.style.display = 'none';
+            syriaFields.style.display = 'none';
+
+            if (method === "شام كاش") {
+                shamFields.style.display = 'block';
+            } else if (method === "سيرياتيل كاش") {
+                syriaFields.style.display = 'block';
+            }
+        }
+
+        function validateAndSubmit() {
+            var method = document.getElementById('payment_method').value;
+            if (method === "") {
+                alert("يرجى اختيار المحفظة التي قمت بالتحويل إليها أولاً.");
+                return;
+            }
+
+            if (method === "شام كاش") {
+                if (document.getElementById('sham_trans_id').value.trim() === "") {
+                    alert("يرجى إدخال رقم العملية لشام كاش.");
+                    return;
+                }
+            } else if (method === "سيرياتيل كاش") {
+                if (document.getElementById('syria_trans_id').value.trim() === "") {
+                    alert("يرجى إدخال رقم العملية لسيرياتيل كاش.");
+                    return;
+                }
+            }
+
+            document.getElementById('orderForm').submit();
+        }
+    </script>
+
+</body>
+</html>

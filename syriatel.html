@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SYRIATEL | شحن الرصيد</title>
+  <style>
+    :root{
+      --bg-start:#ff6b6b;
+      --bg-end:#ff3b3b;
+      --card-bg:#fff;
+      --accent:#8b0f0f;
+    }
+    body{
+      margin:0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg-start),var(--bg-end));
+      color:#111;
+      display:flex;
+      justify-content:center;
+      padding:28px 16px;
+      box-sizing:border-box;
+    }
+    .container{
+      width:100%;
+      max-width:520px;
+    }
+    h1{
+      text-align:center;
+      color:#fff;
+      margin:0 0 12px 0;
+      font-size:22px;
+    }
+    p.lead{
+      text-align:center;
+      color:rgba(255,255,255,0.95);
+      margin:0 0 18px 0;
+    }
+    form.card{
+      background:var(--card-bg);
+      border-radius:12px;
+      padding:18px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.18);
+    }
+    label{ display:block; text-align:right; font-weight:600; margin-top:8px; color:#222; }
+    input[type="text"], input[type="number"], select{
+      width:100%;
+      padding:12px;
+      margin-top:6px;
+      border-radius:8px;
+      border:1px solid #d6d6d6;
+      box-sizing:border-box;
+      font-size:15px;
+    }
+    .inline-row{ display:flex; gap:10px; align-items:center; justify-content:flex-end; margin-top:8px; flex-wrap:wrap; }
+    .inline-row label{ margin:0; font-weight:700; color:#333; }
+    .radio { margin-left:6px; transform:scale(1.05); }
+
+    .result{
+      margin-top:10px;
+      font-weight:700;
+      color:var(--accent);
+      text-align:right;
+    }
+    .btn{
+      width:100%;
+      padding:12px;
+      margin-top:12px;
+      border-radius:10px;
+      border:none;
+      background:linear-gradient(90deg,#ffb3b3,#ff6b6b);
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+      font-size:15px;
+    }
+    .btn:active{ transform:translateY(1px); }
+
+    .payment-section{
+      display:none;
+      margin-top:16px;
+      background:#fafafa;
+      border-radius:10px;
+      padding:12px;
+      border:1px solid #eee;
+    }
+    .payment-option{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:10px;
+      background:#fff;
+      border:1px solid #eee;
+      cursor:pointer;
+      margin-bottom:10px;
+      transition:0.18s;
+    }
+    .payment-option:hover{ transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.06); }
+    .payment-option img{ width:84px; height:auto; border-radius:8px; object-fit:cover; }
+    .payment-option .label{ font-weight:700; color:#222; text-align:right; flex:1; }
+    .payment-option.selected{ border:2px solid #c92b2b; box-shadow:0 10px 30px rgba(201,43,43,0.12); }
+
+    .small-note{ font-size:13px; color:#666; margin-top:8px; text-align:right; }
+
+    @media (max-width:420px){
+      .payment-option img{ width:72px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>قسم سيرياتيل - شحن وتحويل</h1>
+    <p class="lead">اختر نوع الحساب ثم أدخل رقم الجوال والمبلغ. يمكنك اختيار أن يكون المبلغ "صافي" أو "مصاري".</p>
+
+    <!-- استبدل YOUR_FORM_ID بمعرف Formspree الخاص بك -->
+    <form id="syriatelForm" class="card" action="https://formspree.io/f/xkoajqqe" method="POST" onsubmit="return prepareAndSend(event)">
+      <input type="hidden" name="provider" value="syriatel">
+
+      <label>نوع الإدخال</label>
+      <div class="inline-row" style="justify-content:flex-start;">
+        <label style="text-align:right;">
+          <input class="radio" type="radio" name="mode" value="net" id="modeNet" checked>
+          صافي (أدخل المبلغ الذي يصل للمزود)
+        </label>
+        <label style="text-align:right;">
+          <input class="radio" type="radio" name="mode" value="gross" id="modeGross">
+          مصاري (أدخل المبلغ الذي سيدفعه الزبون)
+        </label>
+      </div>
+
+      <label for="phone">رقم الجوال</label>
+      <input id="phone" name="phone" type="text" placeholder="09xxxxxxxx" required>
+
+      <label for="amount">المبلغ (ليرة سورية)</label>
+      <input id="amount" name="amount" type="number" placeholder="مثلاً 10000" min="1" required>
+
+      <div class="result" id="commissionResult">العمولة: -</div>
+      <div class="result" id="netResult" style="font-weight:600; margin-top:6px;">الرصيد صافي: -</div>
+      <div class="result" id="reachResult" style="font-weight:600; margin-top:6px;">الرصيد مصاري (يصل للزبون): -</div>
+
+      <button type="button" class="btn" id="continueBtn">متابعة للدفع</button>
+
+      <!-- واجهة الدفع -->
+      <div class="payment-section" id="paymentSection">
+        <h3 style="margin:0 0 10px 0; text-align:right; color:#333;">اختر طريقة الدفع</h3>
+
+        <!-- شام كاش -->
+        <div class="payment-option" data-method="شام كاش">
+          <img src="qr-code.png" alt="شام كاش">
+          <div style="flex:1; text-align:right;">
+            <div class="label">شام كاش</div>
+            <div class="small-note">ادفع عبر شام كاش ثم أدخل رقم العملية أدناه</div>
+          </div>
+        </div>
+
+        <!-- سيرياتيل كاش -->
+        <div class="payment-option" data-method="سيرياتيل كاش">
+          <img src="cash.png" alt="سيرياتيل كاش">
+          <div style="flex:1; text-align:right;">
+            <div class="label">سيرياتيل كاش</div>
+            <div class="small-note">ادفع عبر سيرياتيل كاش ثم أدخل رقم العملية أدناه</div>
+          </div>
+        </div>
+
+        <label for="transaction_id">رقم العملية</label>
+        <input id="transaction_id" name="transaction_id" type="text" placeholder="أدخل رقم العملية" required>
+
+        <!-- حقول مخفية لإرسال طريقة الدفع والعمولة -->
+        <input type="hidden" name="payment_method" id="paymentMethod" value="">
+        <input type="hidden" name="commission" id="commissionField" value="">
+        <input type="hidden" name="net_with_commission" id="netField" value="">
+        <input type="hidden" name="reach_customer" id="reachField" value="">
+        <input type="hidden" name="mode_sent" id="modeSent" value="net">
+
+        <button type="submit" class="btn" style="background:linear-gradient(90deg,#ff6b6b,#c92b2b);">إرسال الطلب</button>
+      </div>
+
+     
+    </form>
+  </div>
+
+  <script>
+    // عناصر DOM
+    const amountInput = document.getElementById('amount');
+    const commissionResult = document.getElementById('commissionResult');
+    const netResult = document.getElementById('netResult');
+    const reachResult = document.getElementById('reachResult');
+    const continueBtn = document.getElementById('continueBtn');
+    const paymentSection = document.getElementById('paymentSection');
+    const paymentMethodInput = document.getElementById('paymentMethod');
+    const commissionField = document.getElementById('commissionField');
+    const netField = document.getElementById('netField');
+    const reachField = document.getElementById('reachField');
+    const paymentOptions = document.querySelectorAll('.payment-option');
+    const modeNetRadio = document.getElementById('modeNet');
+    const modeGrossRadio = document.getElementById('modeGross');
+    const modeSent = document.getElementById('modeSent');
+
+    // القاعدة: العمولة = 25% من المبلغ المدخل حسب الوضع:
+    // - إذا الوضع "صافي" (net): المستخدم يدخل المبلغ الذي يصل للمزود => العمولة = 25% من هذا المبلغ => المبلغ الذي يدفعه الزبون = المبلغ + العمولة
+    // - إذا الوضع "مصاري" (gross): المستخدم يدخل المبلغ الذي يدفعه الزبون => العمولة = 25% من هذا المبلغ => المبلغ الذي يصل للمزود = المبلغ - العمولة
+    function calculateByMode(amount, mode){
+      if (!amount || isNaN(amount) || amount <= 0) return { commission:0, net:0, reach:0, totalToPay:0 };
+      if (mode === 'net') {
+        const commission = amount * 0.25;
+        const totalToPay = amount + commission;
+        return { commission, net: amount, reach: amount, totalToPay };
+      } else {
+        const commission = amount * 0.25;
+        const reach = amount - commission;
+        const totalToPay = amount;
+        return { commission, net: reach, reach, totalToPay };
+      }
+    }
+
+    // تحديث العرض عند تغيير المبلغ أو الوضع
+    function updateDisplay(){
+      const amt = parseFloat(amountInput.value);
+      const mode = modeNetRadio.checked ? 'net' : 'gross';
+      const res = calculateByMode(amt, mode);
+      if (res.commission > 0) {
+        commissionResult.textContent = `العمولة: ${Math.round(res.commission)} ل.س`;
+        netResult.textContent = `الرصيد صافي: ${Math.round(res.net)} ل.س`;
+        reachResult.textContent = `الرصيد مصاري (يصل للزبون): ${Math.round(res.reach)} ل.س`;
+      } else {
+        commissionResult.textContent = 'العمولة: -';
+        netResult.textContent = 'الرصيد صافي: -';
+        reachResult.textContent = 'الرصيد مصاري (يصل للزبون): -';
+      }
+    }
+
+    amountInput.addEventListener('input', updateDisplay);
+    modeNetRadio.addEventListener('change', updateDisplay);
+    modeGrossRadio.addEventListener('change', updateDisplay);
+
+    // إظهار واجهة الدفع
+    continueBtn.addEventListener('click', () => {
+      const phone = document.getElementById('phone').value.trim();
+      const amt = parseFloat(amountInput.value);
+      const mode = modeNetRadio.checked ? 'net' : 'gross';
+      if (!phone) { alert('الرجاء إدخال رقم الجوال'); return; }
+      if (!amt || amt <= 0) { alert('الرجاء إدخال مبلغ صالح'); return; }
+
+      paymentSection.style.display = 'block';
+      continueBtn.style.display = 'none';
+      modeSent.value = mode;
+
+      // احسب القيم واحتفظ بها
+      const res = calculateByMode(amt, mode);
+      commissionField.value = Math.round(res.commission);
+      netField.value = Math.round(res.net);
+      reachField.value = Math.round(res.reach);
+
+      // عرض محدث
+      commissionResult.textContent = `العمولة: ${Math.round(res.commission)} ل.س`;
+      netResult.textContent = `الرصيد صافي: ${Math.round(res.net)} ل.س`;
+      reachResult.textContent = `الرصيد مصاري (يصل للزبون): ${Math.round(res.reach)} ل.س`;
+    });
+
+    // تفعيل اختيار طريقة الدفع
+    paymentOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        paymentOptions.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        const method = opt.getAttribute('data-method') || '';
+        paymentMethodInput.value = method;
+      });
+    });
+
+    // قبل الإرسال: تحقق من اختيار طريقة الدفع ووجود رقم العملية
+    function prepareAndSend(e){
+      if (!paymentMethodInput.value){
+        e.preventDefault();
+        alert('الرجاء اختيار طريقة الدفع (شام كاش أو سيرياتيل كاش) ثم إدخال رقم العملية.');
+        return false;
+      }
+      const tx = document.getElementById('transaction_id').value.trim();
+      if (!tx){
+        e.preventDefault();
+        alert('الرجاء إدخال رقم العملية.');
+        return false;
+      }
+      // تأكد أن الحقول المخفية مملوءة
+      if (!commissionField.value){
+        const amt = parseFloat(amountInput.value) || 0;
+        const mode = modeNetRadio.checked ? 'net' : 'gross';
+        const res = calculateByMode(amt, mode);
+        commissionField.value = Math.round(res.commission);
+        netField.value = Math.round(res.net);
+        reachField.value = Math.round(res.reach);
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>

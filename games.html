@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Life | قسم الألعاب</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #2b2b2b; /* خلفية الموقع الداكنة */
+            --header-bg: #222222;
+            --text-color: #ffffff;
+            --main-gold: #cfa861;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px;
+            border-radius: 25px;
+            border: none;
+            background-color: #3a3a3a;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            text-align: right;
+        }
+
+        /* شبكة الألعاب */
+        .games-grid {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* تصميم بطاقة اللعبة */
+        .game-item {
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .game-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .game-bg {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* شعار صغير في زاوية البطاقة */
+        .small-logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .game-bg img {
+            height: 80%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+
+        .game-name {
+            background-color: transparent;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* تدرجات لونية مختلفة للخلفيات تطابق الصورة */
+        .bg-gray { background: linear-gradient(135deg, #5c6265, #2b3033); }
+        .bg-red { background: linear-gradient(135deg, #ff4b1f, #ff9068); }
+        .bg-gold { background: linear-gradient(135deg, #d4af37, #8e6516); }
+        .bg-blue { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
+        .bg-green { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .bg-purple { background: linear-gradient(135deg, #8e2de2, #4a00e0); }
+        .bg-orange { background: linear-gradient(135deg, #f12711, #f5af19); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn">
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <div style="font-size: 20px; font-weight: bold; color: var(--main-gold);">قسم الألعاب</div>
+        <div style="width: 20px;"></div> </header>
+
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="بحث...">
+    </div>
+
+    <div class="games-grid">
+        
+       <a href="pubg.html" class="game-item">
+            <div class="game-bg bg-gray">
+                <i class="fa-solid fa-paintbrush small-logo"></i>
+                <img src="pubg.png" alt="ببجي موبايل"> 
+            </div>
+            <div class="game-name">ببجي موبايل</div>
+        </a>
+
+        <a href="freefire.html" class="game-item">
+            <div class="game-bg bg-gold">
+                <i class="fa-solid fa-paintbrush small-logo"></i>
+                <img src="ferr-fire.png" alt="فري فاير">
+            </div>
+            <div class="game-name">فري فاير</div>
+        </a>
+
+        <a href="jawaker.html" class="game-item">
+            <div class="game-bg bg-red">
+                <i class="fa-solid fa-paintbrush small-logo"></i>
+                <img src="jawaker.png" alt="جواكر">
+            </div>
+            <div class="game-name">جواكر</div>
+        </a>
+
+        <a href="clash.html" class="game-item">
+            <div class="game-bg bg-purple">
+                <i class="fa-solid fa-paintbrush small-logo"></i>
+                <img src="clash-of-clans.png" alt="كلاش اوف كلانس">
+            </div>
+            <div class="game-name">كلاش اوف كلانس</div>
+        </a>
+
+        <a href="roblox.html" class="game-item">
+            <div class="game-bg bg-gray">
+                <i class="fa-solid fa-paintbrush small-logo"></i>
+                <img src="roblox.png" alt="روبلوكس">
+            </div>
+            <div class="game-name">روبلوكس</div>
+        </a>
+
+        <a href="cod.html" class="game-item">
+            <div class="game-bg bg-gold">
+                <i class="fa-solid fa-paintbrush small-logo"></i>
+                <img src="cod-mobile.png" alt="كول أوف ديوتي">
+            </div>
+            <div class="game-name">كول أوف ديوتي - موبايل</div>
+        </a>
+
+        <a
+
+        <a href="fc-mobile.html" class="game-item">
+            <div class="game-bg bg-orange">
+                <i class="fa-solid fa-paintbrush small-logo"></i>
+                <img src="efootball.png" alt="فيفا موبايل">
+            </div>
+            <div class="game-name"></div>فيفا موبايل</div>
+        </a>
+
+        </div>
+
+</body>
+</html>

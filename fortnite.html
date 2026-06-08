@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Life | شحن فورتنايت</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* الألوان المتطابقة مع الصورة المرجعية */
+            --bg-color: #2c2c2c; 
+            --search-bg: #383838;
+            --text-color: #ffffff;
+            --main-gold: #cfa861;
+            --modal-bg: #222222;
+        }
+
+        body {
+            margin: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-bottom: 80px; 
+            overflow-x: hidden;
+        }
+
+        /* الشريط العلوي */
+        header { 
+            width: 100%; padding: 15px 30px; display: flex; justify-content: space-between; 
+            align-items: center; box-sizing: border-box; background-color: #1a1a1a; 
+            border-bottom: 2px solid var(--main-gold); box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+        }
+        
+        .logo-main { font-size: 22px; font-weight: bold; color: var(--main-gold); text-decoration: none; }
+        .page-title { font-size: 18px; font-weight: bold; color: #ccc; }
+        .back-btn { color: var(--main-gold); text-decoration: none; font-size: 22px; transition: 0.3s; }
+
+        /* شريط البحث */
+        .search-container { 
+            width: 90%; 
+            max-width: 900px; /* تم تقليص العرض لضمان ترتيب 3 بطاقات في الصف */
+            margin: 30px 0 40px 0; 
+        }
+        
+        .search-bar { 
+            width: 100%; 
+            padding: 15px 25px; 
+            border-radius: 25px; 
+            border: none; 
+            background-color: var(--search-bg); 
+            color: white; 
+            font-size: 15px; 
+            outline: none; 
+            box-sizing: border-box; 
+            text-align: right;
+        }
+
+        /* شبكة الحزم (Grid) مصممة لتستوعب 3 بطاقات وينزل الرابع يميناً */
+        .uc-grid { 
+            width: 95%; 
+            max-width: 900px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            gap: 25px; 
+            justify-content: center;
+        }
+
+        .uc-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: transform 0.3s; 
+        }
+        .uc-wrapper:hover { transform: translateY(-5px); }
+
+        /* حاوية الصورة لتطابق صورتك تماماً */
+        .uc-box {
+            width: 100%; 
+            border-radius: 15px; 
+            position: relative;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+            transition: 0.3s;
+        }
+        .uc-wrapper:hover .uc-box { box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1); }
+
+        /* الصورة تأخذ كامل الحاوية بشكل مستطيل كما في تصميمك */
+        .uc-image { 
+            width: 100%; 
+            height: auto; 
+            display: block;
+            object-fit: cover;
+        }
+
+        /* تنسيق النصوص الدقيق المطابق للصورة (3 أسطر) */
+        .uc-details { 
+            margin-top: 15px; 
+            text-align: center; 
+            line-height: 1.6;
+        }
+        .uc-title { 
+            font-size: 16px; 
+            font-weight: bold; 
+            color: #ffffff; 
+            margin-bottom: 2px; 
+            direction: ltr; /* للحفاظ على ترتيب - V 1000 */
+        }
+        .uc-subtitle {
+            font-size: 14px;
+            font-weight: bold;
+            color: #dcdcdc; /* لون رمادي فاتح */
+            margin-bottom: 2px;
+        }
+        .uc-price { 
+            font-size: 16px; 
+            color: #ffffff; 
+            font-weight: bold; 
+        }
+
+        /* النافذة المنبثقة للطلب */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; 
+            align-items: center; z-index: 2000; backdrop-filter: blur(5px); 
+        }
+        .modal-content { 
+            background-color: var(--modal-bg); width: 90%; max-width: 400px; 
+            border-radius: 15px; padding: 30px; box-sizing: border-box; border: 1px solid var(--main-gold); 
+        }
+        .modal-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 16px; color: white; font-weight: bold; }
+        .modal-price-badge { background-color: #111; color: var(--main-gold); padding: 5px 15px; border-radius: 15px; border: 1px solid #333;}
+        
+        .id-input { 
+            width: 100%; background-color: #111; border: 1px solid #444; padding: 15px; 
+            border-radius: 10px; color: white; font-size: 15px; margin-bottom: 20px; 
+            box-sizing: border-box; outline: none; transition: 0.3s; text-align: left; direction: ltr; 
+        }
+        .id-input:focus { border-color: var(--main-gold); }
+        
+        .modal-actions { display: flex; gap: 15px; margin-bottom: 15px; }
+        .btn-cancel, .btn-buy { flex: 1; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-cancel { background-color: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-buy { background-color: var(--main-gold); color: #111; border: none; }
+        .btn-buy:hover { background-color: #e0b612; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-main">ART LIFE</a>
+        <div class="page-title">فورتنايت (Fortnite)</div>
+        <a href="games.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+    </header>
+
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="بحث...">
+    </div>
+
+    <div class="uc-grid">
+        
+        <div class="uc-wrapper" onclick="openModal('- V 1000', 'S.P 1,899.45')">
+            <div class="uc-box">
+                <img src="images/fn-card-1000.png" alt="1000 V-Bucks" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">- V 1000</div>
+                <div class="uc-subtitle">فورتنايت - كود</div>
+                <div class="uc-price">S.P 1,899.45</div>
+            </div>
+        </div>
+
+        <div class="uc-wrapper" onclick="openModal('- V 2800', 'S.P 3,803.316')">
+            <div class="uc-box">
+                <img src="images/fn-card-2800.png" alt="2800 V-Bucks" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">- V 2800</div>
+                <div class="uc-subtitle">فورتنايت - كود</div>
+                <div class="uc-price">S.P 3,803.316</div>
+            </div>
+        </div>
+
+        <div class="uc-wrapper" onclick="openModal('- V 5000', 'S.P 6,086.265')">
+            <div class="uc-box">
+                <img src="images/fn-card-5000.png" alt="5000 V-Bucks" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">- V 5000</div>
+                <div class="uc-subtitle">فورتنايت - كود</div>
+                <div class="uc-price">S.P 6,086.265</div>
+            </div>
+        </div>
+
+        <div class="uc-wrapper" onclick="openModal('- V 13500', 'S.P 15,216.463')">
+            <div class="uc-box">
+                <img src="images/fn-card-13500.png" alt="13500 V-Bucks" class="uc-image">
+            </div>
+            <div class="uc-details">
+                <div class="uc-title">- V 13500</div>
+                <div class="uc-subtitle">فورتنايت - كود</div>
+                <div class="uc-price">S.P 15,216.463</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="modal-overlay" id="purchaseModal">
+        <div class="modal-content">
+            <div class="modal-header-info">
+                <span id="modalTitle">الباقة</span>
+                <span class="modal-price-badge" id="modalPrice">السعر</span>
+            </div>
+            <input type="text" id="player_id" class="id-input" placeholder="أدخل معرف حساب Epic Games">
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
+                <button class="btn-buy" onclick="processPurchase()">شراء الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(title, price) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalPrice').innerText = price;
+            document.getElementById('player_id').value = '';
+            document.getElementById('purchaseModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        function processPurchase() {
+            var playerId = document.getElementById('player_id').value.trim();
+            var packageName = document.getElementById('modalTitle').innerText;
+
+            if (playerId === "") {
+                alert("يرجى إدخال معرف الحساب أولاً!");
+                return;
+            }
+
+            alert("تم تسجيل طلبك بنجاح! جاري إرسال " + packageName + " للحساب: " + playerId);
+            closeModal();
+        }
+    </script>
+</body>
+</html>

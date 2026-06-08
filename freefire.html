@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Life | قسم فري فاير</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #262626;
+            --header-bg: #1f1f1f;
+            --text-color: #ffffff;
+            --main-gold: #cfa861;
+            --neon-gold: 0 0 10px #cfa861, 0 0 20px #cfa861;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* الشريط العلوي */
+        header {
+            width: 100%;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: var(--header-bg);
+            border-bottom: 2px solid var(--main-gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .logo-main {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--main-gold);
+            text-shadow: var(--neon-gold);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .page-title { font-size: 18px; font-weight: bold; color: #ccc; }
+        .back-btn { color: var(--main-gold); text-decoration: none; font-size: 22px; transition: 0.3s; }
+        .back-btn:hover { transform: scale(1.1); }
+
+        /* البانر الرئيسي لفري فاير */
+        .main-banner {
+            width: 80%;
+            max-width: 550px;
+            margin-top: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a1a; /* لون خلفية بديل في حال تأخر الصورة */
+        }
+        
+        .main-banner img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        /* شريط البحث */
+        .search-container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 20px 0;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 25px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            text-align: right;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* شبكة الأقسام */
+        .category-grid {
+            width: 90%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding-bottom: 50px;
+        }
+
+        .category-link { text-decoration: none; color: inherit; display: block; }
+
+        .category-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .category-wrapper:hover { transform: translateY(-5px); }
+
+        /* تصميم الصندوق الأساسي */
+        .category-box {
+            width: 100%;
+            height: 120px;
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 1px solid #444;
+            overflow: hidden;
+        }
+
+        /* التدرجات اللونية المختلفة المستوحاة من الصورة */
+        .bg-purple { background: linear-gradient(135deg, #6a11cb, #2575fc); }
+        .bg-gold { background: linear-gradient(135deg, #f6d365, #fda085); }
+        .bg-dark { background: linear-gradient(135deg, #434343, #000000); }
+        .bg-mixed { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+
+        /* أيقونات التواصل */
+        .social-icons {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 12px;
+            z-index: 2;
+        }
+        .social-icons i.fa-instagram { color: #E1306C; }
+        .social-icons i.fa-facebook { color: #1877F2; }
+        .social-icons i.fa-twitter { color: #1DA1F2; }
+        .social-icons i.fa-tiktok { color: #ffffff; text-shadow: 1px 1px 0px #00f2fe, -1px -1px 0px #fe0979;}
+
+        /* شعار المتجر */
+        .mini-logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 10px;
+            font-weight: bold;
+            border: 2px solid #222;
+            z-index: 2;
+        }
+
+        /* صورة البطاقة */
+        .category-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+        .category-wrapper:hover .category-image { opacity: 1; transform: scale(1.05); }
+
+        .category-details { margin-top: 10px; text-align: center; }
+        .category-title { font-size: 14px; font-weight: bold; color: white; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-main">ART LIFE</a>
+        <div class="page-title">فري فاير</div>
+        <a href="games.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+    </header>
+
+    <!-- البانر الرئيسي للصورة الكبيرة -->
+    <div class="main-banner">
+        <!-- ضع هنا اسم صورة البانر الخاص بك (مثلاً: ff-main-banner.png) -->
+        <img src="free-1.png" alt="Free Fire Banner">
+    </div>
+
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="بحث...">
+    </div>
+
+    <!-- شبكة الأقسام -->
+    <div class="category-grid">
+        
+        <!-- القسم 1: فري فاير فوري -->
+        <a href="ff-fast.html" class="category-link">
+            <div class="category-wrapper">
+                <div class="category-box bg-purple">
+                    <div class="social-icons">
+                        <i class="fa-brands fa-instagram"></i>
+                        <i class="fa-brands fa-facebook"></i>
+                        <i class="fa-brands fa-twitter"></i>
+                        <i class="fa-brands fa-tiktok"></i>
+                    </div>
+                    <div class="mini-logo">AL</div>
+                    <img src="free-8.png" alt="فري فاير فوري" class="category-image">
+                </div>
+                <div class="category-details">
+                    <div class="category-title">فري فاير فوري</div>
+                </div>
+            </div>
+        </a>
+
+        <!-- القسم 2: فري فاير فوري (سيرفر 2) -->
+        <a href="fff-fast.html" class="category-link">
+            <div class="category-wrapper">
+                <div class="category-box bg-purple">
+                    <div class="social-icons">
+                        <i class="fa-brands fa-instagram"></i>
+                        <i class="fa-brands fa-facebook"></i>
+                        <i class="fa-brands fa-twitter"></i>
+                        <i class="fa-brands fa-tiktok"></i>
+                    </div>
+                    <div class="mini-logo">AL</div>
+                    <img src="free-8.png" alt="سيرفر 2" class="category-image">
+                </div>
+                <div class="category-details">
+                    <div class="category-title">فري فاير فوري (سيرفر 2)</div>
+                </div>
+            </div>
+        </a>
+
+        <!-- القسم 3: فري فاير فوري (سيرفر 3) -->
+        <a href="ffff-fast.html" class="category-link">
+            <div class="category-wrapper">
+                <div class="category-box bg-purple">
+                    <div class="social-icons">
+                        <i class="fa-brands fa-instagram"></i>
+                        <i class="fa-brands fa-facebook"></i>
+                        <i class="fa-brands fa-twitter"></i>
+                        <i class="fa-brands fa-tiktok"></i>
+                    </div>
+                    <div class="mini-logo">AL</div>
+                    <img src="free-8.png" alt="سيرفر 3" class="category-image">
+                </div>
+                <div class="category-details">
+                    <div class="category-title">فري فاير فوري (سيرفر 3)</div>
+                </div>
+            </div>
+        </a>
+
+      
+    </div>
+
+</body>
+</html>
