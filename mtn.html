@@ -197,17 +197,17 @@
     const modeGrossRadio = document.getElementById('modeGross');
     const modeSent = document.getElementById('modeSent');
 
-    // القاعدة: العمولة = 25% من المبلغ المدخل حسب الوضع:
-    // - إذا الوضع "صافي" (net): المستخدم يدخل المبلغ الذي يصل للمزود => العمولة = 25% من هذا المبلغ => المبلغ الذي يدفعه الزبون = المبلغ + العمولة
-    // - إذا الوضع "مصاري" (gross): المستخدم يدخل المبلغ الذي يدفعه الزبون => العمولة = 25% من هذا المبلغ => المبلغ الذي يصل للمزود = المبلغ - العمولة
+    // القاعدة: العمولة = 20% من المبلغ المدخل حسب الوضع:
+    // - إذا الوضع "صافي" (net): المستخدم يدخل المبلغ الذي يصل للمزود => العمولة = 20% من هذا المبلغ => المبلغ الذي يدفعه الزبون = المبلغ + العمولة
+    // - إذا الوضع "مصاري" (gross): المستخدم يدخل المبلغ الذي يدفعه الزبون => العمولة = 20% من هذا المبلغ => المبلغ الذي يصل للمزود = المبلغ - العمولة
     function calculateByMode(amount, mode){
       if (!amount || isNaN(amount) || amount <= 0) return { commission:0, net:0, reach:0, totalToPay:0 };
       if (mode === 'net') {
-        const commission = amount * 0.25;
+        const commission = amount * 0.20;
         const totalToPay = amount + commission;
         return { commission, net: amount, reach: amount, totalToPay };
       } else {
-        const commission = amount * 0.25;
+        const commission = amount * 0.20;
         const reach = amount - commission;
         const totalToPay = amount;
         return { commission, net: reach, reach, totalToPay };
